@@ -2,21 +2,9 @@ pipeline {
     agent any
 
     parameters {
-        string(
-            name: 'STUDENT_NAME',
-            defaultValue: 'Nitin',
-            description: 'Enter your name'
-        )
-        choice(
-            name: 'ENVIRONMENT',
-            choices: ['dev', 'staging', 'prod'],
-            description: 'Select environment'
-        )
-        booleanParam(
-            name: 'RUN_PYTHON',
-            defaultValue: true,
-            description: 'Do you want to run Python?'
-        )
+        string(name: 'STUDENT_NAME', defaultValue: 'Nitin', description: 'Enter your name')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Select environment')
+        booleanParam(name: 'RUN_PYTHON', defaultValue: true, description: 'Run Python?')
     }
 
     stages {
@@ -32,34 +20,21 @@ pipeline {
                 expression { params.RUN_PYTHON == true }
             }
             steps {
-                echo "Running Python for ${params.STUDENT_NAME}..."
                 sh 'python3 app.py'
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                expression { params.ENVIRONMENT == 'prod' }
-            }
-            steps {
-                echo "Deploying to PRODUCTION!"
             }
         }
     }
 
     post {
         success {
-            echo "Pipeline completed successfully!"
-            mail(
-                to: 'ppnb973@gmail.com',
-                subject: "✅ Pipeline Passed: ${JOB_NAME} #${BUILD_NUMBER}",
-                body: """
-Hello ${params.STUDENT_NAME}!
-
-Your Jenkins pipeline passed successfully!
-
-Job: ${JOB_NAME}
-Build: #${BUILD_NUMBER}
-Environment: ${params.ENVIRONMENT}
-Status: SUCCESS ✅
-                """
+            mail to: 'ppnb973@gmail.com',
+                 subject: "Pipeline Passed: ${JOB_NAME} #${BUILD_NUMBER}",
+                 body: "Hello ${params.STUDENT_NAME}, your pipeline passed successfully!"
+        }
+        failure {
+            mail to: 'ppnb973@gmail.com',
+                 subject: "Pipeline Failed: ${JOB_NAME} #${BUILD_NUMBER}",
+                 body: "Hello ${params.STUDENT_NAME}, your pipeline failed!"
+        }
+    }
+}
