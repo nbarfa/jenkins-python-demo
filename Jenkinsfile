@@ -40,10 +40,10 @@ pipeline {
 
         stage('Deploy') {
             when {
-                expression { params.ENVIRONMENT == 'prod' }
+                expression { params.ENVIRONMENT == 'dev' }
             }
             steps {
-                echo "Deploying to PRODUCTION for ${params.STUDENT_NAME}!"
+                echo "Deploying to DEV for ${params.STUDENT_NAME}!"
             }
         }
     }
