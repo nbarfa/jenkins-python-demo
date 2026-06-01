@@ -7,4 +7,4 @@ print("2 + 3 =", 2 + 3)
 
 numbers = [1, 2, 3, 4, 5]
 print("Sum of numbers:", sum(numbers))
-
+print("Auto trigger is working!")
