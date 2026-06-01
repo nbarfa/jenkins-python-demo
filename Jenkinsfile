@@ -24,7 +24,6 @@ pipeline {
             steps {
                 echo "Student Name: ${params.STUDENT_NAME}"
                 echo "Environment: ${params.ENVIRONMENT}"
-                echo "Run Python: ${params.RUN_PYTHON}"
             }
         }
 
@@ -43,14 +42,24 @@ pipeline {
                 expression { params.ENVIRONMENT == 'prod' }
             }
             steps {
-                echo "Deploying to PRODUCTION for ${params.STUDENT_NAME}!"
+                echo "Deploying to PRODUCTION!"
             }
         }
     }
 
     post {
         success {
-            echo "Pipeline completed for ${params.STUDENT_NAME}!"
-        }
-    }
-}
+            echo "Pipeline completed successfully!"
+            mail(
+                to: 'your-gmail@gmail.com',
+                subject: "✅ Pipeline Passed: ${JOB_NAME} #${BUILD_NUMBER}",
+                body: """
+Hello ${params.STUDENT_NAME}!
+
+Your Jenkins pipeline passed successfully!
+
+Job: ${JOB_NAME}
+Build: #${BUILD_NUMBER}
+Environment: ${params.ENVIRONMENT}
+Status: SUCCESS ✅
+                """
